@@ -5,10 +5,28 @@
 #include "Bfprog.h"
 
 int main(int argc, char** argv){
+	bool print_help = argc == 1;
+	std::string subcommand;
+	if(!print_help){
+		subcommand = argv[1];
+		print_help = print_help || subcommand == "help";
+	}
+
+	if(print_help){
+		std::cout <<
+			"Brainfuck interpreter and compiler.\n"
+			"USAGE: bf {run|com|help} <file> [output]\n"
+			"SUBCOMMANDS:\n"
+			"\trun\t\tInterpret the file.\n"
+			"\tcom\t\tCompile the file. The output filename can be provided, otherwise \"out\" will be used.\n"
+			"\thelp\t\tPrint this help message.\n";
+		exit(0);
+	}
+
 	Bfprog bf(256);
-	Bfprog::Parse_Result res = bf.parse_file(argv[1]);
+	Bfprog::Parse_Result res = bf.parse_file(argv[2]);
 	if(res.status == Bfprog::Parse_Result::INVALID_FILE){
-		std::cerr << "Invalid file: "<< argv[1] << std::endl;
+		std::cerr << "Invalid file: "<< argv[2] << std::endl;
 		exit(1);
 	}
 
@@ -21,14 +39,15 @@ int main(int argc, char** argv){
 		exit(1);
 	}
 
-	std::string argv2(argv[2]);
-	if(argv2 == "run")
-		// TODO: fix input system for run
+	if(subcommand == "run")
 		bf.run();
-	else if(argv2 == "com"){
+	else if(subcommand == "com"){
 		bf.compile_to_c("/tmp/bf_com.c");
 		std::string command("cc -o ");
-		command += argv[3];
+		if(argc >= 4)
+			command += argv[3];
+		else
+			command += "out";
 		command += " /tmp/bf_com.c";
 		system(command.c_str());
 	}
