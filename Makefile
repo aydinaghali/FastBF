@@ -9,6 +9,7 @@ DEBUG_CPPFLAGS=-g
 RELEASE_CPPFLAGS=-O3
 
 PROFILE?=DEBUG
+UNAME:=$(shell uname)
 
 ifeq ($(PROFILE), DEBUG)
 	CPPFLAGS+=$(DEBUG_CPPFLAGS)
@@ -32,7 +33,9 @@ all: build run
 build: $(OBJS)
 	$(CXX) $(OBJS) -o $(NAME) $(LIB) $(LINK_LIB)
 ifeq ($(PROFILE), DEBUG)
+ifeq ($(UNAME), Darwin)
 	dsymutil $(NAME)
+endif
 endif
 
 run:
