@@ -1,6 +1,6 @@
 # bf
 Build: `$ make build`
 
-Interpreter: `$ ./bf filename.bf run`
+Interpreter: `$ ./bf run filename.bf`
 
-Compiler: `$ ./bf filename.bf com ./out`
+Compiler: `$ ./bf com filename.bf`
