@@ -9,7 +9,7 @@ int main(int argc, char** argv){
 	std::string subcommand;
 	if(!print_help){
 		subcommand = argv[1];
-		print_help = print_help || subcommand == "help";
+		print_help = subcommand == "help";
 	}
 
 	if(print_help){
